@@ -1,0 +1,50 @@
+intent:
+  name: campus_role_based
+  description: "Role-Based Intent-Driven Network Management for Campus LAN"
+
+campus:
+  name: "REVA University"
+
+network:
+  management_protocol: netconf
+  device_type: cisco_ios_xe
+
+roles:
+
+  teachers:
+    internet: true
+    academic_resources: true
+    internal_network: true
+    student_network: false
+    teacher_network: true
+    priority: high
+
+  students:
+    internet: true
+    academic_resources: true
+    internal_network: false
+    student_network: true
+    teacher_network: false
+    priority: normal
+
+  guests:
+    internet: true
+    academic_resources: false
+    internal_network: false
+    student_network: false
+    teacher_network: false
+    priority: low
+
+policies:
+  interface:
+    enabled: true
+    name: GigabitEthernet2
+    description: "Campus Role-Based Network"
+
+automation:
+  validate_before_apply: true
+  backup_before_change: true
+  verify_after_apply: true
+  detect_conflicts: true
+  detect_drift: true
+  audit_logging: true

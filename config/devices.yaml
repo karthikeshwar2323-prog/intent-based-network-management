@@ -1,0 +1,6 @@
+devices:
+  - name: campus-router
+    host: 10.10.20.48
+    username: developer
+    port: 830
+    protocol: netconf
