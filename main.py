@@ -3,6 +3,7 @@ from observability.metrics import record_validation, record_configuration_genera
 from intent.intent_parser import load_intent
 from automation.validator import validate_intent
 from automation.policy_engine import detect_conflicts
+from automation.role_manager import resolve_role_assignments
 from automation.config_generator import generate_interface_config
 from automation.apply_config import apply_configuration
 from automation.audit_logger import AuditLogger
@@ -55,8 +56,13 @@ def main():
         print("\nWorkflow stopped because intent validation failed.")
         return
 
-    # Step 3: Detect policy conflicts
-    print("\nStep 3: Checking for policy conflicts...")
+    # Step 3: Resolve role assignments
+    print("\nStep 3: Resolving role assignments...")
+
+    resolved_roles = resolve_role_assignments(intent)
+
+    # Step 4: Detect policy conflicts
+    print("\nStep 4: Checking for policy conflicts...")
 
     if not detect_conflicts(intent):
 
@@ -74,8 +80,8 @@ def main():
         )
         return
 
-    # Step 4: Display role policies
-    print("\nStep 4: Role-based policies loaded...")
+    # Step 5: Display role policies
+    print("\nStep 5: Role-based policies loaded...")
 
     for role, policy in intent["roles"].items():
 
@@ -99,8 +105,8 @@ def main():
         )
         print("  Priority:", policy["priority"])
 
-    # Step 5: Generate Cisco configuration
-    print("\nStep 5: Generating Cisco IOS-XE NETCONF XML...")
+    # Step 6: Generate Cisco configuration
+    print("\nStep 6: Generating Cisco IOS-XE NETCONF XML...")
 
     native_config = generate_interface_config(intent)
     record_configuration_generation()
@@ -108,15 +114,15 @@ def main():
     print("\nGenerated Configuration:")
     print(native_config)
 
-    # Step 6: Load expected configuration
-    print("\nStep 6: Loading expected configuration...")
+    # Step 7: Load expected configuration
+    print("\nStep 7: Loading expected configuration...")
 
     expected_configuration = load_expected_configuration()
 
     print("Expected configuration:")
     print(expected_configuration)
 
-    # Step 7: Select execution mode
+    # Step 8: Select execution mode
     print("\n" + "=" * 60)
     print(" EXECUTION MODE")
     print("=" * 60)
@@ -126,7 +132,7 @@ def main():
 
     choice = input("\nSelect mode (1/2): ").strip()
 
-    # Step 8: Simulation
+    # Step 9: Simulation
     if choice == "1":
 
         print("\nSimulation Mode selected.")
@@ -146,7 +152,7 @@ def main():
             roles=roles
         )
 
-    # Step 9: Live deployment
+    # Step 10: Live deployment
     elif choice == "2":
 
         print("\nLive Cisco NETCONF Mode selected.")
@@ -172,7 +178,7 @@ def main():
             )
             return
 
-        print("\nStep 10: Checking live Cisco configuration for drift...")
+        print("\nStep 11: Checking live Cisco configuration for drift...")
 
         from automation.drift_detector import get_live_drift_status
 

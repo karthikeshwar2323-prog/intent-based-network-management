@@ -9,6 +9,17 @@ network:
   management_protocol: netconf
   device_type: cisco_ios_xe
 
+role_assignments:
+
+  teacher01:
+    role: teachers
+
+  student01:
+    role: students
+
+  guest01:
+    role: guests
+
 roles:
 
   teachers:
