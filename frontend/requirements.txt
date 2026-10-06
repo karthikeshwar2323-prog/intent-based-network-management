@@ -1,0 +1,4 @@
+streamlit>=1.40,<2
+PyYAML>=6.0
+ncclient>=0.6
+prometheus-client>=0.20
