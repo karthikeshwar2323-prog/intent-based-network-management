@@ -4,6 +4,7 @@ from intent.intent_parser import load_intent
 from automation.validator import validate_intent
 from automation.policy_engine import detect_conflicts
 from automation.role_manager import resolve_role_assignments
+from automation.acl_generator import generate_acl_policies
 from automation.config_generator import generate_interface_config
 from automation.apply_config import apply_configuration
 from automation.audit_logger import AuditLogger
@@ -105,8 +106,13 @@ def main():
         )
         print("  Priority:", policy["priority"])
 
-    # Step 6: Generate Cisco configuration
-    print("\nStep 6: Generating Cisco IOS-XE NETCONF XML...")
+    # Step 6: Generate role-based ACL policies
+    print("\nStep 6: Generating role-based ACL policies...")
+
+    acl_policies = generate_acl_policies(intent)
+
+    # Step 7: Generate Cisco configuration
+    print("\nStep 7: Generating Cisco IOS-XE NETCONF XML...")
 
     native_config = generate_interface_config(intent)
     record_configuration_generation()
@@ -114,15 +120,15 @@ def main():
     print("\nGenerated Configuration:")
     print(native_config)
 
-    # Step 7: Load expected configuration
-    print("\nStep 7: Loading expected configuration...")
+    # Step 8: Load expected configuration
+    print("\nStep 8: Loading expected configuration...")
 
     expected_configuration = load_expected_configuration()
 
     print("Expected configuration:")
     print(expected_configuration)
 
-    # Step 8: Select execution mode
+    # Step 9: Select execution mode
     print("\n" + "=" * 60)
     print(" EXECUTION MODE")
     print("=" * 60)
@@ -132,7 +138,7 @@ def main():
 
     choice = input("\nSelect mode (1/2): ").strip()
 
-    # Step 9: Simulation
+    # Step 10: Simulation
     if choice == "1":
 
         print("\nSimulation Mode selected.")
@@ -152,7 +158,7 @@ def main():
             roles=roles
         )
 
-    # Step 10: Live deployment
+    # Step 11: Live deployment
     elif choice == "2":
 
         print("\nLive Cisco NETCONF Mode selected.")
@@ -178,7 +184,7 @@ def main():
             )
             return
 
-        print("\nStep 11: Checking live Cisco configuration for drift...")
+        print("\nStep 12: Checking live Cisco configuration for drift...")
 
         from automation.drift_detector import get_live_drift_status
 

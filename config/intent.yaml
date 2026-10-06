@@ -23,6 +23,7 @@ role_assignments:
 roles:
 
   teachers:
+    vlan: 10
     internet: true
     academic_resources: true
     internal_network: true
@@ -31,6 +32,7 @@ roles:
     priority: high
 
   students:
+    vlan: 20
     internet: true
     academic_resources: true
     internal_network: false
@@ -39,6 +41,7 @@ roles:
     priority: normal
 
   guests:
+    vlan: 30
     internet: true
     academic_resources: false
     internal_network: false

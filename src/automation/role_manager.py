@@ -17,9 +17,24 @@ class RoleManager:
                     f"'{role_name}'."
                 )
 
+            policy = self.roles[role_name]
+            vlan = policy.get("vlan")
+
+            if vlan is None:
+                raise ValueError(
+                    f"Role '{role_name}' does not define a VLAN."
+                )
+
+            if not isinstance(vlan, int) or not 1 <= vlan <= 4094:
+                raise ValueError(
+                    f"Role '{role_name}' has an invalid VLAN '{vlan}'."
+                )
+
             self.resolved_roles[identity] = {
                 "role": role_name,
-                "policy": self.roles[role_name],
+                "vlan": vlan,
+                "priority": policy.get("priority"),
+                "policy": policy,
             }
 
         return self.resolved_roles
@@ -29,12 +44,10 @@ class RoleManager:
         print("--------------------------")
 
         for identity, data in self.resolved_roles.items():
-            role = data["role"]
-            priority = data["policy"].get("priority")
-
             print(
-                f"{identity} -> {role} "
-                f"(priority: {priority})"
+                f"{identity} -> {data['role']} "
+                f"(VLAN: {data['vlan']}, "
+                f"priority: {data['priority']})"
             )
 
 

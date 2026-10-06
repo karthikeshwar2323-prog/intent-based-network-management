@@ -20,14 +20,11 @@ def apply_configuration(intent):
     print("\nStep 6: Creating configuration backup...")
     backup_configuration()
 
-    print("\nStep 7: Generating configuration...")
-    native_config = generate_interface_config(intent)
+    print("\nStep 7: Generating device-compatible configuration...")
+    configuration = generate_interface_config(intent)
 
-    print(native_config)
-
-    configuration = f"""<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-{native_config}
-</config>"""
+    print("\nGenerated NETCONF configuration:")
+    print(configuration)
 
     print("\nStep 8: Connecting to Cisco IOS-XE...")
 
@@ -59,12 +56,14 @@ def apply_configuration(intent):
     try:
         print("\nStep 9: Applying intent configuration...")
 
-        record_deployment(True)
-
         result = connection.edit_config(
             target="running",
-            config=configuration
+            config=configuration,
+            default_operation="merge",
+            error_option="rollback-on-error"
         )
+
+        record_deployment(True)
 
         print("\nConfiguration result:")
         print(result.xml)
